@@ -31,9 +31,9 @@ class WebRTCSignaling extends EventEmitter {
 	 * @param id peer id, if leave empty automatically generate with uuid package
 	 * @param url signaling websocket server url, if leave empty use the default free server
 	 */
-	constructor(id: string = uuid(), url = "ws://167.172.176.143:8000/") {
+	constructor(public id: string = uuid(), url = "ws://167.172.176.143:8000/") {
 		super();
-		this.socket = new WebSocket(url + id);
+		this.socket = new WebSocket(url + this.id);
 		this.socket.addEventListener("close", this.handleClose.bind(this));
 		this.socket.addEventListener("open", this.handleOpen.bind(this));
 	}
