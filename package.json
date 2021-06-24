@@ -1,0 +1,65 @@
+{
+	"name": "@davey2/webrtc-signaling",
+	"version": "0.0.0-development",
+	"main": "dist/index.js",
+	"unpkg": "dist/bundle.js",
+	"types": "dist/index.d.ts",
+	"devDependencies": {
+		"@commitlint/cli": "^12.1.4",
+		"@commitlint/config-conventional": "^12.1.4",
+		"@types/node": "^15.12.2",
+		"@types/uuid": "^8.3.0",
+		"@typescript-eslint/eslint-plugin": "^4.26.1",
+		"@typescript-eslint/parser": "^4.26.1",
+		"cz-conventional-changelog": "^3.3.0",
+		"eslint": "^7.28.0",
+		"husky": "^6.0.0",
+		"lint-staged": "^11.0.0",
+		"prettier": "2.3.1",
+		"ts-loader": "^9.2.3",
+		"typescript": "^4.3.2",
+		"webpack": "^5.38.1",
+		"webpack-cli": "^4.7.2",
+		"semantic-release": "^17.4.4"
+	},
+	"lint-staged": {
+		"*.{js,json,yaml,md}": "npm run format",
+		"*.ts": [
+			"npm run format",
+			"npm run lint"
+		]
+	},
+	"scripts": {
+		"build": "npm run build:webpack && npm run build:tsc",
+		"build:webpack": "webpack --mode production",
+		"build:tsc": "tsc -p tsconfig.node.json",
+		"prepare": "husky install",
+		"lint": "eslint src",
+		"format": "prettier --write",
+		"semantic-release": "semantic-release"
+	},
+	"dependencies": {
+		"uuid": "^8.3.2"
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/davey2/webrtc-signaling.git"
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"release": {
+		"branches": [
+			"main"
+		]
+	}
+}
