@@ -18,9 +18,9 @@ class WebRTCSignaling extends EventEmitter {
 		iceServers: [
 			{ urls: "stun:stun.l.google.com:19302" },
 			{
-				urls: "turn:0.peerjs.com:3478",
-				username: "peerjs",
-				credential: "peerjsp"
+				urls: "turn:167.172.176.143:3478",
+				username: "free",
+				credential: "free"
 			}
 		],
 		iceCandidatePoolSize: 10
