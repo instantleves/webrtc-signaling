@@ -1,6 +1,5 @@
 {
 	"name": "@davey2/webrtc-signaling",
-	"version": "0.0.0-development",
 	"main": "dist/index.js",
 	"unpkg": "dist/bundle.js",
 	"types": "dist/index.d.ts",
