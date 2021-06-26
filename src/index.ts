@@ -18,7 +18,7 @@ class WebRTCSignaling extends EventEmitter {
 		iceServers: [
 			{ urls: "stun:stun.l.google.com:19302" },
 			{
-				urls: "turn:167.172.176.143:3478",
+				urls: "turn:turn.webrtc-signaling.tk:3478",
 				username: "free",
 				credential: "free"
 			}
@@ -31,7 +31,7 @@ class WebRTCSignaling extends EventEmitter {
 	 * @param id peer id, if leave empty automatically generate with uuid package
 	 * @param url signaling websocket server url, if leave empty use the default free server
 	 */
-	constructor(public id?: string, url = "ws://167.172.176.143:8000/") {
+	constructor(public id?: string, url = "wss://server.webrtc-signaling.tk/") {
 		super();
 
 		if (!this.id) this.id = uuid();
