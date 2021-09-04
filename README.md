@@ -18,15 +18,31 @@ or include in browser
 
 Constructor
 
-```javascript
-const signaling = new WebRTCSignaling(/* optional id */);
+```typescript
+const signaling = new WebRTCSignaling(/* optional params */);
+
+// constructor params:
+// id: string, optional, default: generates with uuid
+// url: string, optional, default: wss://server.webrtc-signaling.tk/
+// rtcConfiguration: RTCConfiguration, optional, default:
+/* {
+	iceServers: [
+		{ urls: "stun:stun.l.google.com:19302" },
+		{
+			urls: "turn:turn.webrtc-signaling.tk:3478",
+			username: "free",
+			credential: "free"
+		}
+	],
+	iceCandidatePoolSize: 10
+} */
 ```
 
 Events
 
-```javascript
-signaling.on("open", () => {
-	console.log(signaling.id);
+```typescript
+signaling.on("open", id => {
+	console.log(id);
 	// output: random uuid
 });
 
@@ -45,7 +61,7 @@ signaling.on("connection", peer => {
 
 Connect
 
-```javascript
+```typescript
 const peer = signaling.connect("REMOTE-ID");
 // peer type is RTCPeerConnection
 // if the id is not exist, emit the error to error event listener
