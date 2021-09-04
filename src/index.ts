@@ -7,34 +7,35 @@ import ErrorType from "./ErrorType";
 declare interface WebRTCSignaling {
 	on(event: "connection", listener: (peer: RTCPeerConnection) => void): this;
 	on(event: "error", listener: (error: ErrorType) => void): this;
-	on(event: "open", listener: () => void): this;
+	on(event: "open", listener: (id: string) => void): this;
 	on(event: string, listener: () => void): this;
 }
 
 class WebRTCSignaling extends EventEmitter {
-	connections: Connection[] = [];
+	public connections: Connection[] = [];
+	public id: string;
 	private socket: WebSocket;
-	private configuration = {
-		iceServers: [
-			{ urls: "stun:stun.l.google.com:19302" },
-			{
-				urls: "turn:turn.webrtc-signaling.tk:3478",
-				username: "free",
-				credential: "free"
-			}
-		],
-		iceCandidatePoolSize: 10
-	};
+	private rtcConfiguration: RTCConfiguration;
 
-	/**
-	 * Create instance of WebRTCSignaling
-	 * @param id peer id, if leave empty automatically generate with uuid package
-	 * @param url signaling websocket server url, if leave empty use the default free server
-	 */
-	constructor(public id?: string, url = "wss://server.webrtc-signaling.tk/") {
+	constructor({
+		id = uuid(),
+		url = "wss://server.webrtc-signaling.tk/",
+		rtcConfiguration = {
+			iceServers: [
+				{ urls: "stun:stun.l.google.com:19302" },
+				{
+					urls: "turn:turn.webrtc-signaling.tk:3478",
+					username: "free",
+					credential: "free"
+				}
+			],
+			iceCandidatePoolSize: 10
+		}
+	}: { id?: string; url?: string; rtcConfiguration?: RTCConfiguration } = {}) {
 		super();
 
-		if (!this.id) this.id = uuid();
+		this.id = id;
+		this.rtcConfiguration = rtcConfiguration;
 
 		this.socket = new WebSocket(url + this.id);
 		this.socket.addEventListener("close", this.handleClose.bind(this));
@@ -46,7 +47,7 @@ class WebRTCSignaling extends EventEmitter {
 	}
 
 	private handleOpen() {
-		this.emit("open");
+		this.emit("open", this.id);
 		this.socket.addEventListener("message", this.handleMessage.bind(this));
 	}
 
@@ -55,7 +56,7 @@ class WebRTCSignaling extends EventEmitter {
 
 		switch (data.type) {
 			case MessageType.OFFER: {
-				const peer = new RTCPeerConnection(this.configuration);
+				const peer = new RTCPeerConnection(this.rtcConfiguration);
 				this.emit("connection", peer);
 				this.addConnection(data.from, peer);
 
@@ -94,7 +95,7 @@ class WebRTCSignaling extends EventEmitter {
 	 * @return full usable RTCPeerConnection
 	 */
 	connect(id: string): RTCPeerConnection {
-		const peer = new RTCPeerConnection(this.configuration);
+		const peer = new RTCPeerConnection(this.rtcConfiguration);
 
 		peer.addEventListener("negotiationneeded", async () => {
 			const offer = await peer.createOffer();
